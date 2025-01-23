@@ -1,5 +1,21 @@
 const Domicilio = require('../models/Domicilio');
 
+// Función para obtener todos los domicilios
+const getDomicilios = async (req, res) => {
+    try {
+        const domicilios = await Domicilio.findAll();
+
+        if (domicilios.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron domicilios.' });
+        }
+
+        return res.status(200).json(domicilios); // Devolver los domicilios encontrados
+    } catch (error) {
+        console.error('Error al obtener los domicilios:', error.message);
+        return res.status(500).json({ error: 'No se pudieron obtener los domicilios.' });
+    }
+};
+
 // Función para crear un domicilio
 const createDomicilio = async (req, res) => {
     try {
@@ -61,8 +77,11 @@ const updateEstadoDomicilio = async (req, res, estado) => {
 };
 
 // Exportar las funciones del controlador
+// Exportar las funciones del controlador
 module.exports = {
     createDomicilio,
     updateEstadoDomicilioEntregando: (req, res) => updateEstadoDomicilio(req, res, 2),
-    updateEstadoDomicilioEntregado: (req, res) => updateEstadoDomicilio(req, res, 3)
+    updateEstadoDomicilioEntregado: (req, res) => updateEstadoDomicilio(req, res, 3),
+    getDomicilios, // Agregar la nueva función aquí
 };
+
