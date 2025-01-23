@@ -70,6 +70,7 @@ CREATE TABLE Domicilios (
     DireccionEntrega VARCHAR(200) NOT NULL,
     TipoPago INT NOT NULL,
     NumeroDomicilio INT NOT NULL,
+    Estado int not null,
     CONSTRAINT FK_Domicilios_Usuario FOREIGN KEY (Usuario) REFERENCES Usuario(Documento),
     CONSTRAINT FK_Domicilios_Sedes FOREIGN KEY (Sede) REFERENCES Sedes(Rowid)
 );
