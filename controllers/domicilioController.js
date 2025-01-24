@@ -51,6 +51,37 @@ const getDomicilios = async (req, res) => {
     }
 };
 
+const getMenu = async (req, res) => {
+    try {
+        const { sedeId } = req.params;
+        
+        // Validación del parámetro
+        if (!sedeId || isNaN(Number(sedeId))) {
+            return res.status(400).json({ error: 'El parámetro idempresa es inválido.' });
+        }
+
+        // Consulta SQL usando el pool
+        const [rows] = await pool.execute(
+            `SELECT m.*, s.Empresa ,e.nombre as NombreEmpresa
+            FROM sistemareservas.menus AS m
+            JOIN sistemareservas.sedes AS s ON s.Rowid = m.Sede
+            join sistemareservas.empresas as e on s.empresa = e.nit
+            WHERE m.Estado = 1 AND m.Sede = ?`,
+            [sedeId]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: `No se encontraron menús para la empresa con ID ${sedeId}.` });
+        }
+
+        return res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener menús:', error);
+        return res.status(500).json({ error: 'Error interno del servidor al obtener los menús.' });
+    }
+};
+
+
 // Crear domicilio
 const createDomicilio = async (req, res) => {
     try {
@@ -111,4 +142,5 @@ module.exports = {
     updateEstadoDomicilioEntregando: (req, res) => updateEstadoDomicilio(req, res, ESTADOS.ENTREGANDO),
     updateEstadoDomicilioEntregado: (req, res) => updateEstadoDomicilio(req, res, ESTADOS.ENTREGADO),
     getDomicilios,
+    getMenu
 };

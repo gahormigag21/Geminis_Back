@@ -88,3 +88,13 @@ CREATE TABLE Reservas (
     CONSTRAINT FK_Reservas_Usuario FOREIGN KEY (Usuario) REFERENCES Usuario(Documento),
     CONSTRAINT FK_Reservas_Sedes FOREIGN KEY (Sede) REFERENCES Sedes(Rowid)
 );
+
+create table ComidaDomicilio(
+	Rowid int not null auto_increment primary key,
+    DomicilioId int not null,
+    MenuId int not null,
+    Cantidad int not null, 
+    Valor int not null,
+    constraint FK_ComidaMenu_Menu foreign key (MenuId) references Menus(Rowid),
+    constraint FK_ComidaMenu_Domicilio foreign key (DomicilioId) References domicilios(Rowid)
+);

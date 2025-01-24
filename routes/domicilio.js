@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/:userId', domicilioController.getDomicilios);  // Asegúrate de que el método se llame correctamente
 // Otras rutas para crear y actualizar domicilios
 router.post('/:sedeId', domicilioController.createDomicilio);
+router.get('/Menus/:sedeId', domicilioController.getMenu);
 router.put('/entregando/:domicilioId', domicilioController.updateEstadoDomicilioEntregando);
 router.put('/entregado/:domicilioId', domicilioController.updateEstadoDomicilioEntregado);
 
