@@ -14,7 +14,7 @@ const getDomicilios = async (req, res) => {
         const [rows] = await pool.execute(
             `SELECT Rowid,Usuario,NumeroDomicilio, Fecha, Hora, DireccionEntrega, Estado
             FROM Domicilios
-            WHERE Usuario = ?`,
+            WHERE Usuario = ? and Estado != 3`,
             [userId]
         );
 
