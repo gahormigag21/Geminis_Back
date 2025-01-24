@@ -12,11 +12,33 @@ const getDomicilios = async (req, res) => {
 
         // Consulta SQL usando el pool
         const [rows] = await pool.execute(
-            `SELECT Rowid,Usuario,NumeroDomicilio, Fecha, Hora, DireccionEntrega, Estado
-            FROM Domicilios
-            WHERE Usuario = ? and Estado != 3`,
+            `SELECT
+        D.Rowid,
+        D.Usuario,
+        D.NumeroDomicilio,
+        D.Fecha,
+        D.Hora,
+        D.DireccionEntrega,
+        D.Estado,
+        CONCAT(U.Nombres, ' ', U.Apellido) AS NombreCompleto,
+        E.Nombre AS Empresa
+    FROM
+        Domicilios AS D
+    JOIN
+        Usuario AS U
+        ON D.Usuario = U.Documento
+    JOIN
+        Sedes AS S
+        ON D.Sede = S.Rowid
+    JOIN
+        Empresas AS E
+        ON S.Empresa = E.Nit
+    WHERE
+        D.Usuario = ?
+        AND D.Estado != 3`,
             [userId]
         );
+
 
         if (rows.length === 0) {
             return res.status(404).json({ error: 'No se encontraron domicilios para este usuario.' });
