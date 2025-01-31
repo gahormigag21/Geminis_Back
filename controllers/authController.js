@@ -1,8 +1,7 @@
 const pool = require('../config/db');
-
 const { login, registerUser, listUsers } = require('../services/authService');
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
     try {
         const {
             tipo,
@@ -23,7 +22,6 @@ const createUser = async (req, res) => {
         } = req.body;
 
         if (tipo === 'usuario') {
-            // Crear un usuario utilizando el servicio registerUser
             const user = {
                 documento,
                 nombres,
@@ -37,12 +35,10 @@ const createUser = async (req, res) => {
                 empresa: nitRestaurante || null,
             };
 
-            console.log("Esta creando el usuario")
             const userId = await registerUser(user);
             return res.status(201).json({ message: 'Usuario creado exitosamente', userId });
 
         } else if (tipo === 'restaurante') {
-            // Crear un restaurante en la base de datos
             if (!nit || !nombre) {
                 return res.status(400).json({ message: 'NIT y Nombre son obligatorios para crear un restaurante' });
             }
@@ -50,12 +46,7 @@ const createUser = async (req, res) => {
             const queryEmpresa = `
                 INSERT INTO Empresas (NIT, Nombre, Logo, UbicacionLogo) 
                 VALUES (?, ?, ?, ?)`;
-            const values = [
-                nit,
-                nombre,
-                null,
-                ubicacionLogo || null,
-            ];
+            const values = [nit, nombre, null, ubicacionLogo || null];
 
             await pool.query(queryEmpresa, values);
             return res.status(201).json({ message: 'Restaurante creado exitosamente' });
@@ -64,26 +55,22 @@ const createUser = async (req, res) => {
         return res.status(400).json({ message: 'Tipo inválido. Debe ser "usuario" o "restaurante".' });
 
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error al crear usuario o restaurante' });
+        next(error); // Usa el middleware de manejo de errores
     }
 };
 
-
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
     try {
         const users = await listUsers();
         res.status(200).json(users);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error); // Usa el middleware de manejo de errores
     }
 };
 
-
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
     try {
         const { documento, contrasena } = req.body;
-
         const { token, user } = await login(documento, contrasena);
 
         res.status(200).json({
@@ -94,6 +81,7 @@ const loginUser = async (req, res) => {
                 Nombres: user.Nombres,
                 Apellido: user.Apellido,
                 Administrador: user.Administrador,
+                Empresa: user.Empresa,
             },
         });
     } catch (error) {

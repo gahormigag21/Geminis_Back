@@ -24,6 +24,11 @@ app.get('/', (req, res) => {
     res.send('¡Bienvenido al sistema de reservas Géminis!');
 });
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Ocurrió un error interno del servidor' });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en el puerto ${PORT}`);

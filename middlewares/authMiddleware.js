@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.JWT_SECRET;
 
 const authenticateToken = (req, res, next) => {
-    const token = req.header('Authorization')?.split(' ')[1];
+    const authHeader = req.header('Authorization');
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
         return res.status(401).json({ error: 'Token no proporcionado' });
