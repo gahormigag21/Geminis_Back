@@ -18,7 +18,8 @@ const createUser = async (req, res, next) => {
             nit,
             nombre,
             logo,
-            ubicacionLogo,
+            descripcion,
+            categoria
         } = req.body;
 
         if (tipo === 'usuario') {
@@ -44,9 +45,9 @@ const createUser = async (req, res, next) => {
             }
 
             const queryEmpresa = `
-                INSERT INTO Empresas (NIT, Nombre, Logo, UbicacionLogo) 
-                VALUES (?, ?, ?, ?)`;
-            const values = [nit, nombre, null, ubicacionLogo || null];
+                INSERT INTO Empresas (NIT, Nombre, Logo, Descripcion, Categoria) 
+                VALUES (?, ?, ?, ?, ?)`;
+            const values = [nit, nombre, logo ? Buffer.from(logo, 'base64') : null, descripcion || '', categoria || ''];
 
             await pool.query(queryEmpresa, values);
             return res.status(201).json({ message: 'Restaurante creado exitosamente' });

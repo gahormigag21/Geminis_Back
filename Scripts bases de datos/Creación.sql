@@ -6,8 +6,10 @@ USE SistemaReservas;
 CREATE TABLE Empresas (
     NIT VARCHAR(20) NOT NULL PRIMARY KEY,
     Nombre VARCHAR(100) NOT NULL,
-    Logo VARBINARY(10000),
-    UbicacionLogo VARCHAR(200) 
+    Logo LONGBLOB, -- Ensure this field can handle binary data
+    UbicacionLogo VARCHAR(200),
+    Descripcion VARCHAR(255), -- Nuevo campo Descripcion
+    Categoria VARCHAR(100) -- Nuevo campo Categoria
 );
 
 -- Tabla Usuario
@@ -45,6 +47,8 @@ CREATE TABLE Sedes (
     MesasDisponibles INT NOT NULL,
     ReservasMaximas INT NOT NULL,
     Telefono VARCHAR(15) NULL,
+    Imagenes VARBINARY(10000), -- Nuevo campo Imagenes
+    Horario VARCHAR(100), -- Nuevo campo Horario
     CONSTRAINT FK_Sedes_Empresas FOREIGN KEY (Empresa) REFERENCES Empresas(NIT)
 );
 

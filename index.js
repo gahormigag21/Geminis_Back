@@ -12,8 +12,9 @@ const domicilioRoutes = require('./routes/domicilio');
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Aumentar el límite de tamaño de carga de archivos
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use('/api/domicilio', domicilioRoutes);
 app.use('/api/auth', authRoutes);
