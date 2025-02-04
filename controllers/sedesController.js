@@ -30,8 +30,12 @@ const getSedeById = async (req, res) => {
 // Get all sedes
 const getAllSedes = async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM Sedes');
-        res.status(200).res.json(rows);
+        const [rows] = await pool.query(`
+            SELECT Sedes.*, Empresas.Nombre AS EmpresaNombre, Empresas.Logo AS EmpresaLogo, Empresas.UbicacionLogo, Empresas.Descripcion AS EmpresaDescripcion, Empresas.Categoria AS EmpresaCategoria
+            FROM Sedes
+            JOIN Empresas ON Sedes.Empresa = Empresas.NIT
+        `);
+        res.status(200).json(rows);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Ocurrió un error al obtener las sedes' });
