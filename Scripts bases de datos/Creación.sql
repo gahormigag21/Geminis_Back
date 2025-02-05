@@ -47,7 +47,7 @@ CREATE TABLE Sedes (
     MesasDisponibles INT NOT NULL,
     ReservasMaximas INT NOT NULL,
     Telefono VARCHAR(15) NULL,
-    Imagenes VARBINARY(10000), -- Nuevo campo Imagenes
+    Imagenes LONGBLOB, -- Ensure this field can handle large binary data
     Horario VARCHAR(100), -- Nuevo campo Horario
     CONSTRAINT FK_Sedes_Empresas FOREIGN KEY (Empresa) REFERENCES Empresas(NIT)
 );
