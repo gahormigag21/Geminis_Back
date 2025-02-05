@@ -81,7 +81,6 @@ const getMenu = async (req, res) => {
     }
 };
 
-
 // Crear domicilio
 const createDomicilio = async (req, res) => {
     try {
@@ -137,10 +136,65 @@ const updateEstadoDomicilio = async (req, res, estado) => {
     }
 };
 
+// llenar los domicilios en la base de datos
+const llenarDomicilios = async (req, res) => {
+    try {
+        const { usuario, sede, fecha, hora, tipoPago, numeroDomicilio, menus } = req.body;
+
+        // Validar que todos los campos estén presentes
+        if (!usuario || !sede || !fecha || !hora || !tipoPago || !numeroDomicilio || !menus) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+        }
+
+        // Consultar la dirección del usuario desde la tabla Usuario
+        const [usuarioRows] = await pool.execute(
+            `SELECT Direccion FROM Usuario WHERE Documento = ?`,
+            [usuario]
+        );
+
+        if (usuarioRows.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        const direccionEntrega = usuarioRows[0].Direccion;
+
+        // Insertar el domicilio en la base de datos
+        const [result] = await pool.execute(
+            `INSERT INTO Domicilios (Usuario, Sede, Fecha, Hora, DireccionEntrega, TipoPago, NumeroDomicilio, Estado)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [usuario, sede, fecha, hora, direccionEntrega, tipoPago, numeroDomicilio, ESTADOS.PENDIENTE]
+        );
+
+        // Obtener el ID del domicilio recién creado
+        const domicilioId = result.insertId;
+
+        // Insertar los menús en la tabla ComidaDomicilio
+        for (const menu of menus) {
+            if (menu.cantidad > 0) {
+                await pool.execute(
+                    `INSERT INTO ComidaDomicilio (DomicilioId, MenuId, Cantidad, Valor)
+                    VALUES (?, ?, ?, ?)`,
+                    [domicilioId, menu.menuId, menu.cantidad, menu.valor]
+                );
+            }
+        }
+
+        // Devolver el ID del domicilio creado
+        return res.status(201).json({
+            message: 'Domicilio creado exitosamente.',
+            domicilioId,
+        });
+    } catch (error) {
+        console.error('Error al crear el domicilio:', error.message);
+        return res.status(500).json({ error: 'No se pudo crear el domicilio.' });
+    }
+};
+
 module.exports = {
+    getDomicilios,
     createDomicilio,
+    llenarDomicilios,
+    getMenu,
     updateEstadoDomicilioEntregando: (req, res) => updateEstadoDomicilio(req, res, ESTADOS.ENTREGANDO),
     updateEstadoDomicilioEntregado: (req, res) => updateEstadoDomicilio(req, res, ESTADOS.ENTREGADO),
-    getDomicilios,
-    getMenu
 };
