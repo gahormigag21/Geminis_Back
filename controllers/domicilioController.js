@@ -104,38 +104,6 @@ const createDomicilio = async (req, res) => {
     }
 };
 
-// Actualizar estado
-const updateEstadoDomicilio = async (req, res, estado) => {
-    try {
-        const { domicilioId } = req.params;
-
-        // Consulta SQL para obtener el domicilio
-        const [rows] = await pool.execute(
-            `SELECT * FROM Domicilios WHERE Rowid = ?`,
-            [domicilioId]
-        );
-
-        if (rows.length === 0) {
-            return res.status(404).json({ error: 'Domicilio no encontrado.' });
-        }
-
-        // Actualizar el estado del domicilio
-        await pool.execute(
-            `UPDATE Domicilios SET Estado = ? WHERE Rowid = ?`,
-            [estado, domicilioId]
-        );
-
-        const estadoTexto = estado === ESTADOS.ENTREGANDO ? 'entregando' : 'entregado';
-        return res.status(200).json({
-            message: `Estado del domicilio actualizado a "${estadoTexto}".`,
-            domicilio: rows[0],
-        });
-    } catch (error) {
-        console.error('Error al actualizar el estado del domicilio:', error.message);
-        return res.status(500).json({ error: 'No se pudo actualizar el estado del domicilio.' });
-    }
-};
-
 // llenar los domicilios en la base de datos
 const llenarDomicilios = async (req, res) => {
     try {
@@ -216,7 +184,7 @@ const getDetalleDomicilio = async (req, res) => {
 
         // Consulta SQL para obtener los detalles del domicilio
         const [domicilio] = await pool.execute(
-            `SELECT * FROM Domicilios WHERE Rowid = ?`,
+            `SELECT * FROM Domicilios WHERE Rowid = ? and Estado !=3`,
             [domicilioId]
         );
 
@@ -246,14 +214,35 @@ const getDetalleDomicilio = async (req, res) => {
     }
 };
 
+const cambiarEstadoDomicilio = async (req, res) => {
+    try {
+        const { domicilioId } = req.params;
+        const { nuevoEstado } = req.body;
+
+        // Validar que el nuevo estado esté dentro del rango permitido (1-3)
+        if (nuevoEstado < 1 || nuevoEstado > 3) {
+            return res.status(400).json({ error: 'Estado no válido.' });
+        }
+
+        // Actualizar el estado del domicilio
+        await pool.execute(
+            `UPDATE Domicilios SET Estado = ? WHERE Rowid = ?`,
+            [nuevoEstado, domicilioId]
+        );
+
+        return res.json({ message: 'Estado del domicilio actualizado exitosamente.' });
+    } catch (error) {
+        console.error('Error al cambiar el estado del domicilio:', error.message);
+        return res.status(500).json({ error: 'No se pudo cambiar el estado del domicilio.' });
+    }
+};
 
 module.exports = {
     createDomicilio,
     llenarDomicilios,
     getConsecutivo,
-    updateEstadoDomicilioEntregando: (req, res) => updateEstadoDomicilio(req, res, ESTADOS.ENTREGANDO),
-    updateEstadoDomicilioEntregado: (req, res) => updateEstadoDomicilio(req, res, ESTADOS.ENTREGADO),
     getDomicilios,
     getMenu,
-    getDetalleDomicilio
+    getDetalleDomicilio,
+    cambiarEstadoDomicilio
 };
