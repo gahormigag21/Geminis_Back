@@ -20,4 +20,7 @@ router.put('/entregado/:domicilioId', domicilioController.updateEstadoDomicilioE
 // Nueva ruta para llenar la tabla Domicilios y ComidaDomicilio
 router.post('/domicilios/crear', domicilioController.llenarDomicilios);
 
+//Ruta para obtener el consecutivo del domicilio
+router.get('/consecutivo/:sedeId', domicilioController.getConsecutivo);
+
 module.exports = router;

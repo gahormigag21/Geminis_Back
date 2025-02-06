@@ -190,11 +190,31 @@ const llenarDomicilios = async (req, res) => {
     }
 };
 
+//consultar consecutivo
+const getConsecutivo = async (req, res) => {
+    try {
+        const { sedeId } = req.params;
+
+        // Consulta SQL para obtener el número de domicilio más alto para la sede
+        const [rows] = await pool.execute(
+            `SELECT MAX(NumeroDomicilio) AS consecutivo FROM Domicilios WHERE Sede = ?`,
+            [sedeId]
+        );
+
+        const consecutivo = rows[0].consecutivo || 0; // Si no hay domicilios, empezar desde 0
+        return res.json({ consecutivo });
+    } catch (error) {
+        console.error('Error al obtener el consecutivo:', error.message);
+        return res.status(500).json({ error: 'No se pudo obtener el consecutivo del domicilio.' });
+    }
+};
+
 module.exports = {
-    getDomicilios,
     createDomicilio,
     llenarDomicilios,
-    getMenu,
+    getConsecutivo,
     updateEstadoDomicilioEntregando: (req, res) => updateEstadoDomicilio(req, res, ESTADOS.ENTREGANDO),
     updateEstadoDomicilioEntregado: (req, res) => updateEstadoDomicilio(req, res, ESTADOS.ENTREGADO),
+    getDomicilios,
+    getMenu,
 };
