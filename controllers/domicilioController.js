@@ -13,29 +13,29 @@ const getDomicilios = async (req, res) => {
         // Consulta SQL usando el pool
         const [rows] = await pool.execute(
             `SELECT
-        D.Rowid,
-        D.Usuario,
-        D.NumeroDomicilio,
-        D.Fecha,
-        D.Hora,
-        D.DireccionEntrega,
-        D.Estado,
-        CONCAT(U.Nombres, ' ', U.Apellido) AS NombreCompleto,
-        E.Nombre AS Empresa
-    FROM
-        Domicilios AS D
-    JOIN
-        Usuario AS U
-        ON D.Usuario = U.Documento
-    JOIN
-        Sedes AS S
-        ON D.Sede = S.Rowid
-    JOIN
-        Empresas AS E
-        ON S.Empresa = E.Nit
-    WHERE
-        D.Usuario = ?
-        AND D.Estado != 3`,
+                D.Rowid,
+                D.Usuario,
+                D.NumeroDomicilio,
+                D.Fecha,
+                D.Hora,
+                D.DireccionEntrega,
+                D.Estado,
+                CONCAT(U.Nombres, ' ', U.Apellido) AS NombreCompleto,
+                E.Nombre AS Empresa
+            FROM
+                Domicilios AS D
+            JOIN
+                Usuario AS U
+                ON D.Usuario = U.Documento
+            JOIN
+                Sedes AS S
+                ON D.Sede = S.Rowid
+            JOIN
+                Empresas AS E
+                ON S.Empresa = E.Nit
+            WHERE
+                D.Usuario = ?
+            ORDER BY D.Estado;`,
             [userId]
         );
 
@@ -184,7 +184,7 @@ const getDetalleDomicilio = async (req, res) => {
 
         // Consulta SQL para obtener los detalles del domicilio
         const [domicilio] = await pool.execute(
-            `SELECT * FROM Domicilios WHERE Rowid = ? and Estado !=3`,
+            `SELECT * FROM Domicilios WHERE Rowid = ?`,
             [domicilioId]
         );
 
