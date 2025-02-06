@@ -209,6 +209,44 @@ const getConsecutivo = async (req, res) => {
     }
 };
 
+// Obtener el detalle de un domicilio
+const getDetalleDomicilio = async (req, res) => {
+    try {
+        const { domicilioId } = req.params;
+
+        // Consulta SQL para obtener los detalles del domicilio
+        const [domicilio] = await pool.execute(
+            `SELECT * FROM Domicilios WHERE Rowid = ?`,
+            [domicilioId]
+        );
+
+        if (domicilio.length === 0) {
+            return res.status(404).json({ error: 'Domicilio no encontrado.' });
+        }
+
+        // Consulta SQL para obtener los menús asociados al domicilio
+        const [menus] = await pool.execute(
+            `SELECT m.Nombre, cd.Cantidad, cd.Valor 
+             FROM ComidaDomicilio cd
+             JOIN Menus m ON cd.MenuId = m.Rowid
+             WHERE cd.DomicilioId = ?`,
+            [domicilioId]
+        );
+
+        // Combinar los detalles del domicilio con los menús
+        const detalleDomicilio = {
+            ...domicilio[0],
+            menus,
+        };
+
+        return res.json(detalleDomicilio);
+    } catch (error) {
+        console.error('Error al obtener el detalle del domicilio:', error.message);
+        return res.status(500).json({ error: 'No se pudo obtener el detalle del domicilio.' });
+    }
+};
+
+
 module.exports = {
     createDomicilio,
     llenarDomicilios,
@@ -217,4 +255,5 @@ module.exports = {
     updateEstadoDomicilioEntregado: (req, res) => updateEstadoDomicilio(req, res, ESTADOS.ENTREGADO),
     getDomicilios,
     getMenu,
+    getDetalleDomicilio
 };

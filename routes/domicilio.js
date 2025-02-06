@@ -23,4 +23,7 @@ router.post('/domicilios/crear', domicilioController.llenarDomicilios);
 //Ruta para obtener el consecutivo del domicilio
 router.get('/consecutivo/:sedeId', domicilioController.getConsecutivo);
 
+//Ruta para obtener el detalle del domicilio
+router.get('/detalle/:domicilioId', domicilioController.getDetalleDomicilio);
+
 module.exports = router;
