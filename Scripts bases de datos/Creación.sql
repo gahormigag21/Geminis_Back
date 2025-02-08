@@ -43,9 +43,8 @@ CREATE TABLE Sedes (
     Rowid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Direccion VARCHAR(100) NOT NULL,
     Empresa VARCHAR(20) NOT NULL,
-    MesasTotales INT NOT NULL,
     MesasDisponibles INT NOT NULL,
-    ReservasMaximas INT NOT NULL,
+    CantidadDePersonasPorMesa INT NOT NULL,
     Telefono VARCHAR(15) NULL,
     Imagenes VARCHAR(200), -- Ensure this field can handle large binary data
     Horario VARCHAR(600), -- Nuevo campo Horario
@@ -85,11 +84,12 @@ CREATE TABLE Reservas (
     Rowid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Usuario VARCHAR(20) NOT NULL,
     Sede INT NOT NULL,
-    Mesas INT NOT NULL,
+    Ocasion INT NOT NULL, -- Changed field from Mesas to Ocasion
     Fecha DATE NOT NULL,
     Hora TIME NOT NULL,
     Personas INT NOT NULL,
     Estado INT NOT NULL,
+    NumeroDeConfirmacion VARCHAR(50) NOT NULL, -- New field NumeroDeConfirmacion
     CONSTRAINT FK_Reservas_Usuario FOREIGN KEY (Usuario) REFERENCES Usuario(Documento),
     CONSTRAINT FK_Reservas_Sedes FOREIGN KEY (Sede) REFERENCES Sedes(Rowid)
 );

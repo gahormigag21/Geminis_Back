@@ -44,11 +44,11 @@ const getAllSedes = async (req, res) => {
 
 // Create a new sede
 const createSede = async (req, res) => {
-    const { Direccion, Empresa, MesasTotales, MesasDisponibles, ReservasMaximas, Telefono, Imagenes, Horario } = req.body;
+    const { Direccion, Empresa, MesasDisponibles, CantidadDePersonasPorMesa, Telefono, Imagenes, Horario } = req.body;
     try {
         const [result] = await pool.query(
-            'INSERT INTO Sedes (Direccion, Empresa, MesasTotales, MesasDisponibles, ReservasMaximas, Telefono, Horario, Imagenes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [Direccion, Empresa, MesasTotales, MesasDisponibles, ReservasMaximas, Telefono, Horario, Imagenes || null]
+            'INSERT INTO Sedes (Direccion, Empresa, MesasDisponibles, CantidadDePersonasPorMesa, Telefono, Horario, Imagenes) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [Direccion, Empresa, MesasDisponibles, CantidadDePersonasPorMesa, Telefono, Horario, Imagenes || null]
         );
         res.status(201).json({ message: 'Sede creada exitosamente', sedeId: result.insertId });
     } catch (error) {
@@ -60,14 +60,14 @@ const createSede = async (req, res) => {
 // Update a specific sede by ID
 const updateSede = async (req, res) => {
     const { id } = req.params;
-    const { Direccion, Empresa, MesasTotales, MesasDisponibles, ReservasMaximas, Telefono, Imagenes, Horario } = req.body;
+    const { Direccion, Empresa, MesasDisponibles, CantidadDePersonasPorMesa, Telefono, Imagenes, Horario } = req.body;
     try {
-        let query = 'UPDATE Sedes SET Direccion = ?, Empresa = ?, MesasTotales = ?, MesasDisponibles = ?, ReservasMaximas = ?, Telefono = ?, Horario = ?';
-        const params = [Direccion, Empresa, MesasTotales, MesasDisponibles, ReservasMaximas, Telefono, Horario, id];
+        let query = 'UPDATE Sedes SET Direccion = ?, Empresa = ?, MesasDisponibles = ?, CantidadDePersonasPorMesa = ?, Telefono = ?, Horario = ?';
+        const params = [Direccion, Empresa, MesasDisponibles, CantidadDePersonasPorMesa, Telefono, Horario, id];
 
         if (Imagenes) {
             query += ', Imagenes = ?';
-            params.splice(7, 0, Imagenes); // Insert Imagenes at the correct position
+            params.splice(6, 0, Imagenes); // Insert Imagenes at the correct position
         }
 
         query += ' WHERE Rowid = ?';
