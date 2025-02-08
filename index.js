@@ -9,6 +9,7 @@ const restaurantesRoutes = require('./routes/restaurantes');
 const userRoutes = require('./routes/userRoutes');
 const domicilioRoutes = require('./routes/domicilio');
 const sedesRoutes = require('./routes/sedes');
+const menuRoutes = require('./routes/menu');
 const authenticateToken = require('./middlewares/authMiddleware');
 
 const app = express();
@@ -18,16 +19,14 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '100mb' })); // Increase the limit to 100mb
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true })); // Increase the limit to 100mb
 
-
-
 // Rutas sin autenticación para pruebas
-
 app.use('/api/auth', authRoutes);
 
 app.use('/api/domicilio', domicilioRoutes);
 app.use('/api/restaurantes', restaurantesRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/sedes', sedesRoutes);
+app.use('/api/menu', menuRoutes);
 app.get('/',  (req, res) => {
     res.send('Usuario autenticado correctamente');
 });
