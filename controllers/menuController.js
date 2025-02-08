@@ -8,7 +8,7 @@ const getMenuById = async (req, res) => {
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Menú no encontrado' });
         }
-        res.status(200).json(rows[0]);
+        res.status(200).json(rows); // Return all rows
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Ocurrió un error al obtener el menú' });
@@ -27,6 +27,17 @@ const getMenuByRowid = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Ocurrió un error al obtener el menú' });
+    }
+};
+
+// Get all menus
+const getAllMenu = async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM Menus');
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Ocurrió un error al obtener los menús' });
     }
 };
 
@@ -76,5 +87,6 @@ module.exports = {
     getMenuById,
     createMenu,
     updateMenu,
-    getMenuByRowid
+    getMenuByRowid,
+    getAllMenu
 };

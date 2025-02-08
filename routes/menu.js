@@ -14,4 +14,7 @@ router.put('/:id', updateMenu);
 // Endpoint to get a specific menu by rowid
 router.get('/plato/:rowid', getMenuByRowid);
 
+// Endpoint to get all menus
+router.get('/', getAllMenu);
+
 module.exports = router;
