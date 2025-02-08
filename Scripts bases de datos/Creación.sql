@@ -48,7 +48,7 @@ CREATE TABLE Sedes (
     ReservasMaximas INT NOT NULL,
     Telefono VARCHAR(15) NULL,
     Imagenes VARCHAR(200), -- Ensure this field can handle large binary data
-    Horario VARCHAR(100), -- Nuevo campo Horario
+    Horario VARCHAR(600), -- Nuevo campo Horario
     CONSTRAINT FK_Sedes_Empresas FOREIGN KEY (Empresa) REFERENCES Empresas(NIT)
 );
 
@@ -61,6 +61,7 @@ CREATE TABLE Menus (
     Descripcion VARCHAR(255) NULL,
     Precio DECIMAL(10, 2) NOT NULL,
     Tipo INT NOT NULL,
+    ImagenMenu VARCHAR(200), -- Nuevo campo ImagenMenu
     CONSTRAINT FK_Menus_Sedes FOREIGN KEY (Sede) REFERENCES Sedes(Rowid)
 );
 

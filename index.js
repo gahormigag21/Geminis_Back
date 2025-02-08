@@ -32,6 +32,10 @@ app.get('/',  (req, res) => {
     res.send('Usuario autenticado correctamente');
 });
 
+// app.get('/', authenticateToken, (req, res) => {
+//     res.send('Usuario autenticado correctamente');
+// });
+
 
 
 //Rutas con autenticación
@@ -39,9 +43,7 @@ app.get('/',  (req, res) => {
 // app.use('/api/restaurantes', authenticateToken, restaurantesRoutes);
 // app.use('/api/users', authenticateToken, userRoutes);
 // app.use('/api/sedes', authenticateToken, sedesRoutes);
-// app.get('/', authenticateToken, (req, res) => {
-//     res.send('Usuario autenticado correctamente');
-// });
+
 
 
 app.use((err, req, res, next) => {
