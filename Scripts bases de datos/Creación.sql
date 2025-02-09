@@ -84,7 +84,7 @@ CREATE TABLE Reservas (
     Rowid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Usuario VARCHAR(20) NOT NULL,
     Sede INT NOT NULL,
-    Ocasion INT NOT NULL, -- Changed field from Mesas to Ocasion
+    Ocasion INT NOT NULL, 
     Fecha DATE NOT NULL,
     Hora TIME NOT NULL,
     Personas INT NOT NULL,
