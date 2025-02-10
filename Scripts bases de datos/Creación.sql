@@ -90,6 +90,7 @@ CREATE TABLE Reservas (
     Personas INT NOT NULL,
     Estado INT NOT NULL,
     NumeroDeConfirmacion VARCHAR(50) NOT NULL, -- New field NumeroDeConfirmacion
+    Telefono VARCHAR(15) NULL, -- Nuevo campo Telefono que puede ser NULL
     CONSTRAINT FK_Reservas_Usuario FOREIGN KEY (Usuario) REFERENCES Usuario(Documento),
     CONSTRAINT FK_Reservas_Sedes FOREIGN KEY (Sede) REFERENCES Sedes(Rowid)
 );

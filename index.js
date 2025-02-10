@@ -10,6 +10,7 @@ const userRoutes = require('./routes/userRoutes');
 const domicilioRoutes = require('./routes/domicilio');
 const sedesRoutes = require('./routes/sedes');
 const menuRoutes = require('./routes/menu');
+const reservasRoutes = require('./routes/reservas');
 const authenticateToken = require('./middlewares/authMiddleware');
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api/restaurantes', restaurantesRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/sedes', sedesRoutes);
 app.use('/api/menu', menuRoutes);
+app.use('/api/reservas', reservasRoutes);
 app.get('/',  (req, res) => {
     res.send('Usuario autenticado correctamente');
 });
