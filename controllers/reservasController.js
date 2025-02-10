@@ -59,3 +59,48 @@ exports.cancelReservation = async (req, res) => {
         res.status(500).json({ error: 'Error cancelling reservation' });
     }
 };
+
+exports.confirmReservation = async (req, res) => {
+    const { reservationId } = req.params;
+    const Estado = 2;
+
+    try {
+        const [result] = await pool.query('UPDATE Reservas SET Estado = ? WHERE Rowid = ?', [Estado, reservationId]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Reservation not found' });
+        }
+        res.status(200).json({ message: 'Reservation confirmed successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error confirming reservation' });
+    }
+};
+
+exports.completeReservation = async (req, res) => {
+    const { reservationId } = req.params;
+    const Estado = 4;
+
+    try {
+        const [result] = await pool.query('UPDATE Reservas SET Estado = ? WHERE Rowid = ?', [Estado, reservationId]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Reservation not found' });
+        }
+        res.status(200).json({ message: 'Reservation completed successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error completing reservation' });
+    }
+};
+
+exports.noShowReservation = async (req, res) => {
+    const { reservationId } = req.params;
+    const Estado = 5;
+
+    try {
+        const [result] = await pool.query('UPDATE Reservas SET Estado = ? WHERE Rowid = ?', [Estado, reservationId]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Reservation not found' });
+        }
+        res.status(200).json({ message: 'Reservation marked as no-show successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error marking reservation as no-show' });
+    }
+};
