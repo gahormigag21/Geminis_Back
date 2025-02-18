@@ -43,12 +43,11 @@ CREATE TABLE Sedes (
     Rowid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Direccion VARCHAR(100) NOT NULL,
     Empresa VARCHAR(20) NOT NULL,
-    MesasTotales INT NOT NULL,
     MesasDisponibles INT NOT NULL,
-    ReservasMaximas INT NOT NULL,
+    CantidadDePersonasPorMesa INT NOT NULL,
     Telefono VARCHAR(15) NULL,
     Imagenes VARCHAR(200), -- Ensure this field can handle large binary data
-    Horario VARCHAR(100), -- Nuevo campo Horario
+    Horario VARCHAR(600), -- Nuevo campo Horario
     CONSTRAINT FK_Sedes_Empresas FOREIGN KEY (Empresa) REFERENCES Empresas(NIT)
 );
 
@@ -61,6 +60,7 @@ CREATE TABLE Menus (
     Descripcion VARCHAR(255) NULL,
     Precio DECIMAL(10, 2) NOT NULL,
     Tipo INT NOT NULL,
+    ImagenMenu VARCHAR(200), -- Nuevo campo ImagenMenu
     CONSTRAINT FK_Menus_Sedes FOREIGN KEY (Sede) REFERENCES Sedes(Rowid)
 );
 
@@ -84,11 +84,13 @@ CREATE TABLE Reservas (
     Rowid INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Usuario VARCHAR(20) NOT NULL,
     Sede INT NOT NULL,
-    Mesas INT NOT NULL,
+    Ocasion INT NOT NULL, 
     Fecha DATE NOT NULL,
     Hora TIME NOT NULL,
     Personas INT NOT NULL,
     Estado INT NOT NULL,
+    NumeroDeConfirmacion VARCHAR(50) NOT NULL, -- New field NumeroDeConfirmacion
+    Telefono VARCHAR(15) NULL, -- Nuevo campo Telefono que puede ser NULL
     CONSTRAINT FK_Reservas_Usuario FOREIGN KEY (Usuario) REFERENCES Usuario(Documento),
     CONSTRAINT FK_Reservas_Sedes FOREIGN KEY (Sede) REFERENCES Sedes(Rowid)
 );
