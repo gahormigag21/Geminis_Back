@@ -39,7 +39,7 @@ const getDomicilios = async (req, res) => {
                 Empresas AS E
                 ON S.Empresa = E.Nit
             WHERE
-                D.Usuario = ?
+                D.Usuario = ? AND D.Estado != 3
             ORDER BY D.Estado;`,
             [userId]
         );
