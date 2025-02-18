@@ -10,6 +10,11 @@ const getDomicilios = async (req, res) => {
     try {
         const { userId } = req.params;
 
+        // Validar que userId no sea undefined
+        if (!userId) {
+            return res.status(400).json({ error: 'El parámetro userId es requerido.' });
+        }
+
         // Consulta SQL usando el pool
         const [rows] = await pool.execute(
             `SELECT
@@ -54,8 +59,11 @@ const getDomicilios = async (req, res) => {
 // Obtener domicilios por sede
 const getDomiciliosSede = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { Sede } = req.params;
 
+        if (!Sede) {
+            return res.status(400).json({ error: 'El parámetro userId es requerido.' });
+        }
         // Consulta SQL usando el pool
         const [rows] = await pool.execute(
             `SELECT
@@ -80,9 +88,9 @@ const getDomiciliosSede = async (req, res) => {
                 Empresas AS E
                 ON S.Empresa = E.Nit
             WHERE
-                D.sede = ?
+                D.Sede = ?
             ORDER BY D.Estado;`,
-            [userId]
+            [Sede]
         );
 
 
