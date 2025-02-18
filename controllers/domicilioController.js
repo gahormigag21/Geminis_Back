@@ -51,6 +51,52 @@ const getDomicilios = async (req, res) => {
     }
 };
 
+// Obtener domicilios por sede
+const getDomiciliosSede = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Consulta SQL usando el pool
+        const [rows] = await pool.execute(
+            `SELECT
+                D.Rowid,
+                D.Usuario,
+                D.NumeroDomicilio,
+                D.Fecha,
+                D.Hora,
+                D.DireccionEntrega,
+                D.Estado,
+                CONCAT(U.Nombres, ' ', U.Apellido) AS NombreCompleto,
+                E.Nombre AS Empresa
+            FROM
+                Domicilios AS D
+            JOIN
+                Usuario AS U
+                ON D.Usuario = U.Documento
+            JOIN
+                Sedes AS S
+                ON D.Sede = S.Rowid
+            JOIN
+                Empresas AS E
+                ON S.Empresa = E.Nit
+            WHERE
+                D.sede = ?
+            ORDER BY D.Estado;`,
+            [userId]
+        );
+
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron domicilios para este usuario.' });
+        }
+
+        return res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener domicilios:', error);
+        return res.status(500).json({ error: 'Error al obtener los domicilios.' });
+    }
+};
+
 const getMenu = async (req, res) => {
     try {
         const { sedeId } = req.params;
@@ -244,5 +290,6 @@ module.exports = {
     getDomicilios,
     getMenu,
     getDetalleDomicilio,
-    cambiarEstadoDomicilio
+    cambiarEstadoDomicilio,
+    getDomiciliosSede
 };

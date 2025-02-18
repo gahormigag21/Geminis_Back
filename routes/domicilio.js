@@ -5,6 +5,9 @@ const router = express.Router();
 // Ruta para obtener domicilios por el ID de usuario
 router.get('/:userId', domicilioController.getDomicilios);
 
+// Ruta para obtener domicilios por el ID de usuario
+router.get('/sede/:sedeId', domicilioController.getDomiciliosSede);
+
 // Ruta para crear un domicilio (antigua)
 router.post('/:sedeId', domicilioController.createDomicilio);
 
