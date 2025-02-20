@@ -25,6 +25,8 @@ CREATE TABLE Usuario (
     Tipo INT NOT NULL,
     Empresa VARCHAR(20),
     Administrador TINYINT(1) NOT NULL,
+    Email VARCHAR(100) NOT NULL, -- Nuevo campo Email
+    AutenticacionDosFactores TINYINT(1) NOT NULL DEFAULT 0, -- Nuevo campo AutenticacionDosFactores
     CONSTRAINT FK_Usuario_Empresas FOREIGN KEY (Empresa) REFERENCES Empresas(NIT)
 );
 

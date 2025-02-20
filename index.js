@@ -3,6 +3,7 @@ require('dotenv').config(); // Cargar variables de entorno
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const nodemailer = require('nodemailer'); // Importar nodemailer
 
 const authRoutes = require('./routes/authRoutes');
 const restaurantesRoutes = require('./routes/restaurantes');

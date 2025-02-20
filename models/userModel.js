@@ -6,12 +6,17 @@ const getUserByDocument = async (document) => {
     return rows[0];
 };
 
+const getUserByEmail = async (email) => {
+    const [rows] = await pool.query('SELECT * FROM Usuario WHERE Correo = ?', [email]);
+    return rows[0];
+};
+
 // Inserta un nuevo usuario
 const createUser = async (userData) => {
     const { Documento, Nombres, Apellido, Telefono, Direccion, Contrasena, Penalizacion, Estado, Tipo, Empresa, Administrador } = userData;
 
     const [result] = await pool.query(
-        'INSERT INTO Usuario (Documento, Nombres, Apellido, Telefono, Direccion, Contrasena, Penalizacion, Estado, Tipo, Empresa, Administrador) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO Usuario (Documento, Nombres, Apellido, Telefono, Direccion, Contrasena, Penalizacion, Estado, Tipo, Empresa, Administrador, AutenticacionDosFactores) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)',
         [Documento, Nombres, Apellido, Telefono, Direccion, Contrasena, Penalizacion, Estado, Tipo, Empresa, Administrador]
     );
     return result.insertId;
@@ -36,6 +41,9 @@ const updateUserByDocument = async (document, userData) => {
             const hashedPassword = await bcrypt.hash(value, 10);
             fields.push(`${key} = ?`);
             values.push(hashedPassword);
+        } else if (key === 'AutenticacionDosFactores') {
+            fields.push(`${key} = ?`);
+            values.push(value ? 1 : 0);
         } else if (value !== undefined && value !== null) {
             fields.push(`${key} = ?`);
             values.push(value);
@@ -61,6 +69,7 @@ const updateUserByDocument = async (document, userData) => {
 
 module.exports = {
     getUserByDocument,
+    getUserByEmail,
     createUser,
     getAllUsers,
     updateUserByDocument,

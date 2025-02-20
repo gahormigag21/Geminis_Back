@@ -1,5 +1,5 @@
 const pool = require('../config/db');
-const { login, registerUser, listUsers } = require('../services/authService');
+const { login, registerUser, registerRestaurant, listUsers, sendConfirmationEmail } = require('../services/authService');
 
 const createUser = async (req, res, next) => {
     try {
@@ -8,6 +8,7 @@ const createUser = async (req, res, next) => {
             documento,
             nombres,
             apellido,
+            correo,
             telefono,
             direccion,
             contrasena,
@@ -27,6 +28,7 @@ const createUser = async (req, res, next) => {
                 documento,
                 nombres,
                 apellido,
+                correo,
                 telefono,
                 direccion,
                 contrasena,
@@ -34,22 +36,15 @@ const createUser = async (req, res, next) => {
                 estado: estado || 1,
                 administrador: administrador || 0,
                 empresa: nitRestaurante || null,
+                autenticacionDosFactores: 0 // Nuevo campo autenticacionDosFactores con valor por defecto 0
             };
 
             const userId = await registerUser(user);
             return res.status(201).json({ message: 'Usuario creado exitosamente', userId });
 
         } else if (tipo === 'restaurante') {
-            if (!nit || !nombre) {
-                return res.status(400).json({ message: 'NIT y Nombre son obligatorios para crear un restaurante' });
-            }
-
-            const queryEmpresa = `
-                INSERT INTO Empresas (NIT, Nombre, UbicacionLogo, Descripcion, Categoria) 
-                VALUES (?, ?, ?, ?, ?)`;
-            const values = [nit, nombre, UbicacionLogo|| '', descripcion || '', categoria || ''];
-
-            await pool.query(queryEmpresa, values);
+            const restaurant = { nit, nombre, UbicacionLogo, descripcion, categoria };
+            await registerRestaurant(restaurant);
             return res.status(201).json({ message: 'Restaurante creado exitosamente' });
         }
 
@@ -71,8 +66,24 @@ const getUsers = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
     try {
-        const { documento, contrasena } = req.body;
-        const { token, user } = await login(documento, contrasena);
+        const { correo, contrasena } = req.body;
+        const { token, user } = await login(correo, contrasena);
+
+        if (user.AutenticacionDosFactores && !user.confirmationEmailSent) {
+            await sendConfirmationEmail(correo);
+            user.confirmationEmailSent = true;
+            return res.status(200).json({
+                message: 'Correo de confirmación enviado',
+                user: {
+                    Documento: user.Documento,
+                    Nombres: user.Nombres,
+                    Apellido: user.Apellido,
+                    Administrador: user.Administrador,
+                    Empresa: user.Empresa,
+                    AutenticacionDosFactores: user.AutenticacionDosFactores,
+                },
+            });
+        }
 
         res.status(200).json({
             message: 'Inicio de sesión exitoso',
@@ -86,6 +97,7 @@ const loginUser = async (req, res, next) => {
             },
         });
     } catch (error) {
+        console.error('Error en loginUser:', error.message); // Agregar detalles de depuración
         res.status(401).json({ error: error.message });
     }
 };
