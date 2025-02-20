@@ -1,21 +1,28 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const { getUserByDocument } = require('../models/userModel');
 const SECRET_KEY = process.env.JWT_SECRET;
 
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.header('Authorization');
+const authenticateToken = async (req, res, next) => {
+    const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ error: 'Token no proporcionado' });
+        return res.sendStatus(401);
     }
 
     try {
         const decoded = jwt.verify(token, SECRET_KEY);
-        req.user = decoded; // Añade el usuario decodificado al objeto `req`
+        const user = await getUserByDocument(decoded.id);
+
+        if (!user) {
+            return res.sendStatus(403);
+        }
+
+        req.user = user;
         next();
     } catch (error) {
-        res.status(401).json({ error: 'Token inválido o expirado' });
+        res.sendStatus(403);
     }
 };
 
