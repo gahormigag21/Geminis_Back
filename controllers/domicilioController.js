@@ -12,7 +12,7 @@ const getDomicilios = async (req, res) => {
 
         // Validar que userId no sea undefined
         if (!userId) {
-            return res.status(400).json({ error: 'El parámetro userId es requerido.' });
+            return res.status(400).json({ error: 'El parï¿½metro userId es requerido.' });
         }
 
         // Consulta SQL usando el pool
@@ -62,7 +62,7 @@ const getDomiciliosSede = async (req, res) => {
         const { Sede } = req.params;
 
         if (!Sede) {
-            return res.status(400).json({ error: 'El parámetro userId es requerido.' });
+            return res.status(400).json({ error: 'El parï¿½metro userId es requerido.' });
         }
         // Consulta SQL usando el pool
         const [rows] = await pool.execute(
@@ -88,7 +88,7 @@ const getDomiciliosSede = async (req, res) => {
                 Empresas AS E
                 ON S.Empresa = E.Nit
             WHERE
-                D.Sede = ?
+                E.NIT = ?
             ORDER BY D.Estado;`,
             [Sede]
         );
@@ -109,9 +109,9 @@ const getMenu = async (req, res) => {
     try {
         const { sedeId } = req.params;
         
-        // Validación del parámetro
+        // Validaciï¿½n del parï¿½metro
         if (!sedeId || isNaN(Number(sedeId))) {
-            return res.status(400).json({ error: 'El parámetro idempresa es inválido.' });
+            return res.status(400).json({ error: 'El parï¿½metro idempresa es invï¿½lido.' });
         }
 
         // Consulta SQL usando el pool
@@ -125,13 +125,13 @@ const getMenu = async (req, res) => {
         );
 
         if (rows.length === 0) {
-            return res.status(404).json({ error: `No se encontraron menús para la empresa con ID ${sedeId}.` });
+            return res.status(404).json({ error: `No se encontraron menï¿½s para la empresa con ID ${sedeId}.` });
         }
 
         return res.json(rows);
     } catch (error) {
-        console.error('Error al obtener menús:', error);
-        return res.status(500).json({ error: 'Error interno del servidor al obtener los menús.' });
+        console.error('Error al obtener menï¿½s:', error);
+        return res.status(500).json({ error: 'Error interno del servidor al obtener los menï¿½s.' });
     }
 };
 
@@ -163,12 +163,12 @@ const llenarDomicilios = async (req, res) => {
     try {
         const { usuario, sede, fecha, hora, tipoPago, numeroDomicilio, menus } = req.body;
 
-        // Validar que todos los campos estén presentes
+        // Validar que todos los campos estï¿½n presentes
         if (!usuario || !sede || !fecha || !hora || !tipoPago || !numeroDomicilio || !menus) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
         }
 
-        // Consultar la dirección del usuario desde la tabla Usuario
+        // Consultar la direcciï¿½n del usuario desde la tabla Usuario
         const [usuarioRows] = await pool.execute(
             `SELECT Direccion FROM Usuario WHERE Documento = ?`,
             [usuario]
@@ -187,10 +187,10 @@ const llenarDomicilios = async (req, res) => {
             [usuario, sede, fecha, hora, direccionEntrega, tipoPago, numeroDomicilio, ESTADOS.PENDIENTE]
         );
 
-        // Obtener el ID del domicilio recién creado
+        // Obtener el ID del domicilio reciï¿½n creado
         const domicilioId = result.insertId;
 
-        // Insertar los menús en la tabla ComidaDomicilio
+        // Insertar los menï¿½s en la tabla ComidaDomicilio
         for (const menu of menus) {
             if (menu.cantidad > 0) {
                 await pool.execute(
@@ -217,7 +217,7 @@ const getConsecutivo = async (req, res) => {
     try {
         const { sedeId } = req.params;
 
-        // Consulta SQL para obtener el número de domicilio más alto para la sede
+        // Consulta SQL para obtener el nï¿½mero de domicilio mï¿½s alto para la sede
         const [rows] = await pool.execute(
             `SELECT MAX(NumeroDomicilio) AS consecutivo FROM Domicilios WHERE Sede = ?`,
             [sedeId]
@@ -246,7 +246,7 @@ const getDetalleDomicilio = async (req, res) => {
             return res.status(404).json({ error: 'Domicilio no encontrado.' });
         }
 
-        // Consulta SQL para obtener los menús asociados al domicilio
+        // Consulta SQL para obtener los menï¿½s asociados al domicilio
         const [menus] = await pool.execute(
             `SELECT m.Nombre, cd.Cantidad, cd.Valor 
              FROM ComidaDomicilio cd
@@ -255,7 +255,7 @@ const getDetalleDomicilio = async (req, res) => {
             [domicilioId]
         );
 
-        // Combinar los detalles del domicilio con los menús
+        // Combinar los detalles del domicilio con los menï¿½s
         const detalleDomicilio = {
             ...domicilio[0],
             menus,
@@ -273,9 +273,9 @@ const cambiarEstadoDomicilio = async (req, res) => {
         const { domicilioId } = req.params;
         const { nuevoEstado } = req.body;
 
-        // Validar que el nuevo estado esté dentro del rango permitido (1-3)
+        // Validar que el nuevo estado estï¿½ dentro del rango permitido (1-3)
         if (nuevoEstado < 1 || nuevoEstado > 3) {
-            return res.status(400).json({ error: 'Estado no válido.' });
+            return res.status(400).json({ error: 'Estado no vï¿½lido.' });
         }
 
         // Actualizar el estado del domicilio
