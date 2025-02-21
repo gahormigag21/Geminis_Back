@@ -117,7 +117,9 @@ const sendConfirmationEmail = async (email) => {
         },
     });
 
-    const confirmationLink = `http://localhost:3000/api/auth/confirm?email=${encodeURIComponent(email)}`;
+    // Generate a token with a 1-hour expiration
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '10m' });
+    const confirmationLink = `http://localhost:3000/api/auth/confirm?token=${token}`;
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
