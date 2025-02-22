@@ -2,6 +2,7 @@ const express = require('express');
 const authenticateToken = require('../middlewares/authMiddleware');
 const { loginUser, createUser, getUsers } = require('../controllers/authController');
 const { confirmLogin } = require('../controllers/confirmController');
+const { forgotPassword, verifyCode, resetPassword } = require('../controllers/passwordController');
 
 const router = express.Router();
 
@@ -13,6 +14,10 @@ router.get('/protected', authenticateToken, (req, res) => {
 });
 
 router.get('/confirm', confirmLogin); // Nueva ruta para confirmar el inicio de sesión
+
+router.post('/forgot-password', forgotPassword);
+router.post('/verify-code', verifyCode);
+router.post('/reset-password', resetPassword);
 
 router.get('/me', authenticateToken, (req, res) => {
     res.json({ user: req.user });
