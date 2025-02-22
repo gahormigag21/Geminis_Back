@@ -59,10 +59,10 @@ const getDomicilios = async (req, res) => {
 // Obtener domicilios por sede
 const getDomiciliosSede = async (req, res) => {
     try {
-        const { Sede } = req.params;
+        const { sedeId } = req.params;
 
-        if (!Sede) {
-            return res.status(400).json({ error: 'El par�metro userId es requerido.' });
+        if (!sedeId) {
+            return res.status(400).json({ error: 'El par�metro sede es requerido.' });
         }
         // Consulta SQL usando el pool
         const [rows] = await pool.execute(
@@ -90,7 +90,7 @@ const getDomiciliosSede = async (req, res) => {
             WHERE
                 E.NIT = ?
             ORDER BY D.Estado;`,
-            [Sede]
+            [sedeId]
         );
 
 

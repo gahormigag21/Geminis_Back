@@ -11,7 +11,7 @@ router.get('/sede/:sedeId', domicilioController.getDomiciliosSede);
 // Ruta para crear un domicilio (antigua)
 router.post('/:sedeId', domicilioController.createDomicilio);
 
-// Ruta para obtener los menús de una sede
+// Ruta para obtener los menÃºs de una sede
 router.get('/Menus/:sedeId', domicilioController.getMenu);
 
 // Nueva ruta para llenar la tabla Domicilios y ComidaDomicilio
@@ -25,6 +25,5 @@ router.get('/detalle/:domicilioId', domicilioController.getDetalleDomicilio);
 
 //Ruta para cambiar el estado del domicilio
 router.put('/cambiar-estado/:domicilioId', domicilioController.cambiarEstadoDomicilio);
-
 
 module.exports = router;
