@@ -18,7 +18,7 @@ const confirmLogin = async (req, res, next) => {
         });
 
         // Redirect the user to the home page with the new token
-        res.redirect(`${process.env.BASE_URL}/pages/confirm.html?token=${newToken}`);
+        res.redirect(`${process.env.FRONT_URL}/pages/confirm.html?token=${newToken}`);
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
             return res.status(401).json({ message: 'El enlace de confirmación ha expirado. Por favor, vuelva a iniciar sesión.' });
