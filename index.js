@@ -31,7 +31,7 @@ app.use('/api/sedes', sedesRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/reservas', reservasRoutes);
 app.get('/',  (req, res) => {
-    res.send('Usuario autenticado correctamente');
+    res.send('Back end ejecutándose correctamente en producción');
 });
 
 // app.get('/', authenticateToken, (req, res) => {
@@ -53,7 +53,7 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Ocurrió un error interno del servidor' });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.SERVER_PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en el puerto ${PORT}`);
 });
