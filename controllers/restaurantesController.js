@@ -50,18 +50,24 @@ const updateRestaurantByNIT = async (req, res) => {
     const { nit } = req.params;
     const { Nombre, Logo, UbicacionLogo, Descripcion, Categoria } = req.body;
     try {
-        const query = `
+        let query = `
             UPDATE Empresas 
-            SET Nombre = ?, Logo = ?, UbicacionLogo = ?, Descripcion = ?, Categoria = ? 
-            WHERE NIT = ?`;
+            SET Nombre = ?, Logo = ?, Descripcion = ?, Categoria = ? 
+        `;
         const values = [
             Nombre, 
             Logo ? Buffer.from(Logo, 'base64') : null, 
-            UbicacionLogo || '', 
             Descripcion || '', 
             Categoria || '', 
             nit
         ];
+
+        if (UbicacionLogo !== undefined && UbicacionLogo !== null) {
+            query += `, UbicacionLogo = ? `;
+            values.splice(4, 0, UbicacionLogo);
+        }
+
+        query += `WHERE NIT = ?`;
 
         const [result] = await pool.query(query, values);
         if (result.affectedRows === 0) {
