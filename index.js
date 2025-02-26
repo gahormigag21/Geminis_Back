@@ -12,6 +12,7 @@ const domicilioRoutes = require('./routes/domicilio');
 const sedesRoutes = require('./routes/sedes');
 const menuRoutes = require('./routes/menu');
 const reservasRoutes = require('./routes/reservas');
+const pagosRoutes = require('./routes/pagos'); // Importar rutas de pagos
 const authenticateToken = require('./middlewares/authMiddleware');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/sedes', sedesRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/reservas', reservasRoutes);
+app.use('/api/pagos', pagosRoutes); // Añadir la ruta de pagos
 app.get('/',  (req, res) => {
     res.send('Back end ejecutándose correctamente en producción');
 });
