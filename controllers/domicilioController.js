@@ -117,9 +117,9 @@ const getMenu = async (req, res) => {
         // Consulta SQL usando el pool
         const [rows] = await pool.execute(
             `SELECT m.*, s.Empresa ,e.nombre as NombreEmpresa
-            FROM menus AS m
-            JOIN sedes AS s ON s.Rowid = m.Sede
-            join empresas as e on s.empresa = e.nit
+            FROM Menus AS m
+            JOIN Sedes AS s ON s.Rowid = m.Sede
+            join Empresas as e on s.empresa = e.nit
             WHERE m.Estado = 1 AND m.Sede = ?`,
             [sedeId]
         );
