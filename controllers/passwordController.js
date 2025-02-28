@@ -40,7 +40,7 @@ const forgotPassword = async (req, res, next) => {
     }
 };
 
-const verifyCode = async (req, res, next) => {
+const verifyCodePassword = async (req, res, next) => {
     try {
         const { code } = req.body;
 
@@ -76,6 +76,6 @@ const resetPassword = async (req, res, next) => {
 
 module.exports = {
     forgotPassword,
-    verifyCode,
+    verifyCodePassword,
     resetPassword,
 };
