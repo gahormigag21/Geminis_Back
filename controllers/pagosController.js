@@ -21,9 +21,9 @@ const crearPreferencia = async (req, res) => {
         },
       ],
       back_urls: {
-        success: `${process.env.FRONT_URL}?status=success&id=${req.body.unit_price}&title=${req.body.title}`,
-        failure: `${process.env.FRONT_URL}?status=failure&id=${req.body.unit_price}&title=${req.body.title}`,
-        pending: `${process.env.FRONT_URL}?status=pending&id=${req.body.unit_price}&title=${req.body.title}`,
+        success: `${process.env.FRONT_URL}/pages/home.html?status=success&id=${req.body.unit_price}&title=${req.body.title}`,
+        failure: `${process.env.FRONT_URL}/pages/home.html?status=failure&id=${req.body.unit_price}&title=${req.body.title}`,
+        pending: `${process.env.FRONT_URL}/pages/home.html?status=pending&id=${req.body.unit_price}&title=${req.body.title}`,
       },
       auto_return: "approved",
     };
