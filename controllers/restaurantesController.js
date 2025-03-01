@@ -14,6 +14,20 @@ const getNITs = async (req, res) => {
 };
 
 /**
+ * Obtiene los nombres de todos los restaurantes registrados.
+ */
+const getNombres = async (req, res) => {
+    try {
+        const [results] = await pool.query('SELECT NIT, Nombre FROM Empresas'); // Consulta a la tabla "Empresas"
+        const nombres = results.map(row => ({ nit: row.NIT, nombre: row.Nombre })); // Extraer NIT y Nombre
+        res.status(200).json(nombres); // Responder con la lista de nombres
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener nombres de restaurantes' });
+    }
+};
+
+/**
  * Obtiene todos los restaurantes registrados.
  */
 const getAllRestaurants = async (req, res) => {
@@ -80,4 +94,4 @@ const updateRestaurantByNIT = async (req, res) => {
     }
 };
 
-module.exports = { getNITs, getAllRestaurants, getRestaurantByNIT, updateRestaurantByNIT };
+module.exports = { getNITs, getAllRestaurants, getRestaurantByNIT, updateRestaurantByNIT, getNombres };
