@@ -51,6 +51,9 @@ const createUser = async (req, res, next) => {
         return res.status(400).json({ message: 'Tipo inválido. Debe ser "usuario" o "restaurante".' });
 
     } catch (error) {
+        if (error.message === 'El documento ya está registrado' || error.message === 'El correo ya está registrado') {
+            return res.status(400).json({ error: error.message });
+        }
         next(error); // Usa el middleware de manejo de errores
     }
 };
